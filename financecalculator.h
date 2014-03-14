@@ -13,6 +13,8 @@ public:
 		                        QString name);
     static QString html_summary(const TransactData& td, QString name);
 
+    static QString parameter_summary(const StockParameters& sp);
+
 };
 
 #endif  //FINANCECALCULATOR_H

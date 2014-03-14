@@ -1,6 +1,6 @@
 #include "strategy.h"
 #include "basestrategy.h"
-#include "stdtr.h"
+#include "cachestdtr.h"
 #include <cmath>
 //#include <iostream>
 
@@ -48,35 +48,33 @@ TransactData BaseStrategy::finish_trade() {
 }
 
 int BaseStrategy::test_hyphot() {
-    //double sample_var = 0;
-    //double sample_mean = 0;
+    uint size = known_series.size();
     if (!have_prefix_means) {
-        for (uint i = known_series.size() - L + 1; i < known_series.size(); ++i) {
-            double sample_elem = known_series[i] - known_series[i - 1];
+        for (uint i = size - L + 1; i < size; ++i) {
+            double sample_elem = known_series.at(i) - known_series.at(i - 1);
             sample_mean += sample_elem;
             sample_var += sample_elem * sample_elem;
         }
         have_prefix_means = 1;
     } else {
-        double pred = known_series[known_series.size() - L]
-                - known_series[known_series.size() - L - 1];
+        double pred = known_series.at(size - L)
+                - known_series.at(size - L - 1);
         sample_mean -= pred;
         sample_var -= pred * pred;
         double sample_elem = known_series.back()
-                - known_series[known_series.size() - 2];
+                - known_series.at(size - 2);
         sample_mean += sample_elem;
         sample_var += sample_elem * sample_elem;
     }
 
-
-    //std::cout << sample.size() << " " << L - 1 << std::endl;
     double sample_mean_t = sample_mean /(L - 1);
     double sample_var_t = sample_var / (L - 1);
     sample_var_t -= sample_mean_t * sample_mean_t;
     if (sample_var_t <= 0) return 0;
+    double rstat = (L - 2) / sample_var_t * xabsx(sample_mean_t);
+    return ((buysell_state && rstat < xabsx(CacheStdtr::eval(L - 2, p))) ||
+        (!buysell_state && rstat > xabsx(CacheStdtr::eval(L - 2, 1 - p))));
 
-    double t = stdtr(L-2, std::sqrt((L - 2) / sample_var_t) * sample_mean_t);
-    return ((buysell_state && t < p) || (!buysell_state && t > (1 - p)));
 }
 
 int BaseStrategy::get_L() const{
@@ -88,3 +86,8 @@ double BaseStrategy::get_p() const {
 }
 
 BaseStrategy::~BaseStrategy() { }
+
+TransactData BaseStrategy::insert_series(const dvector& series) {
+	known_series.reserve(series.size());
+    return Strategy::insert_series(series);
+}

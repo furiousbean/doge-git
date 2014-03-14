@@ -28,3 +28,11 @@ QString FinanceCalculator::html_summary(const TransactData& td, QString name) {
         int_to_QString(td.buy_points.size() + td.sell_points.size());
 	return result;
 }
+
+QString FinanceCalculator::parameter_summary(const StockParameters& sp) {
+    QString result = "Length: " + int_to_QString(sp.length);
+    result += ", noise sd: " + double_to_QString(sp.noise_sd);
+    result += ", angle sd: " + double_to_QString(sp.angle_sd);
+    result += ", trend mu: " + double_to_QString(1 / sp.trend_prob);
+    return result;
+}

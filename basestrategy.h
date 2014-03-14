@@ -15,7 +15,8 @@ private:
 public:
 	BaseStrategy(StockParameters& sp, int L, double p);
 	virtual int buysell_insert(double value);
-	virtual TransactData finish_trade();
+ 	virtual TransactData finish_trade();
+    TransactData insert_series(const dvector& series);
     int get_L() const;
     double get_p() const;
     virtual ~BaseStrategy();

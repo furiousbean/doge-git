@@ -14,7 +14,9 @@ HEADERS += \
     plotswindow.h \
     financecalculator.h \
     paramwidget.h \
-    mainwindow.h
+    mainwindow.h \
+    cachestdtr.h \
+    twostepstrategy.h
 
 SOURCES += \
     common.cpp \
@@ -82,7 +84,9 @@ SOURCES += \
     plotswindow.cpp \
     financecalculator.cpp \
     paramwidget.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    cachestdtr.cpp \
+    twostepstrategy.cpp
 CONFIG += c++11 console
 TARGET = doge_gui
 QT+= widgets printsupport

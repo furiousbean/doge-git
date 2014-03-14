@@ -22,9 +22,17 @@ const int UINT_UNDEF = -1;
 const int BORDER_DIV = 20;
 const int MAX_L = 50;
 
+const int BIG_DF = 30;
+const int BIG_M = 1000;
+
+const double MIN_OPT_PROB = 0.05;
+const double MAX_OPT_PROB = 0.96;
+const double OPT_PROB_STEP = 0.05;
 
 QString int_to_QString(int val);
 
 QString double_to_QString(double val, int fixed = 1);
+
+double xabsx(double x);
 
 #endif //COMMON_H

@@ -64,12 +64,11 @@ protected:
     void closeEvent(QCloseEvent *event);
 
 private slots:
-    void newFile();
+    void newPlot();
     void about();
     void updateMenus();
     void updateWindowMenu();
     PlotsWindow* createMdiChild();
-    //void switchLayoutDirection();
     void setActiveSubWindow(QWidget *window);
 
 private:
@@ -77,24 +76,19 @@ private:
     void createMenus();
     void createToolBars();
     void createStatusBar();
-    void readSettings();
-    void writeSettings();
+    //void readSettings();
+    //void writeSettings();
     PlotsWindow* activeMdiChild();
-    //QMdiSubWindow *findMdiChild(const QString &fileName);
 
     QMdiArea *mdiArea;
     QSignalMapper *windowMapper;
 
-    QMenu *fileMenu;
-    //QMenu *editMenu;
+    QMenu *actionMenu;
     QMenu *windowMenu;
     QMenu *helpMenu;
     QToolBar *fileToolBar;
-    QToolBar *editToolBar;
-    QAction *newAct;
-    //QAction *openAct;
-    //QAction *saveAct;
-    //QAction *saveAsAct;
+    //QToolBar *editToolBar;
+    QAction *newPlotAct;
     QAction *exitAct;
     QAction *closeAct;
     QAction *closeAllAct;

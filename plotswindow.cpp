@@ -13,7 +13,6 @@ const int dimy = 400;
 
 PlotsWindow::PlotsWindow() {
     setAttribute(Qt::WA_DeleteOnClose);
-    setWindowTitle("Stock Simulator of Doge");
     upperplot = new QCustomPlot;
     bottomplot = new QCustomPlot;
     center = new QWidget;
@@ -148,6 +147,7 @@ void PlotsWindow::make_work() {
     summary -> setText(FinanceCalculator::html_summary(*goodstrategy, baseresult,
         QString("Base")) + "<br><br>" +
         FinanceCalculator::html_summary(testresult, QString("Test")));
+    setWindowTitle("Plot; " + FinanceCalculator::parameter_summary(sp));
     delete goodstrategy;
 }
 

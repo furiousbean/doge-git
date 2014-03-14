@@ -61,10 +61,11 @@ MainWindow::MainWindow()
     createStatusBar();
     updateMenus();
 
-    readSettings();
+    //readSettings();
 
     setWindowTitle("Stock Simulator Of Doge");
     setUnifiedTitleAndToolBarOnMac(true);
+    showMaximized();
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -73,12 +74,12 @@ void MainWindow::closeEvent(QCloseEvent *event)
     if (mdiArea->currentSubWindow()) {
         event->ignore();
     } else {
-        writeSettings();
+        //writeSettings();
         event->accept();
     }
 }
 
-void MainWindow::newFile()
+void MainWindow::newPlot()
 {
     PlotsWindow *child = createMdiChild();
     //child->newFile();
@@ -139,9 +140,9 @@ void MainWindow::paste()
 */
 void MainWindow::about()
 {
-   QMessageBox::about(this, tr("About MDI"),
-            tr("The <b>MDI</b> example demonstrates how to write multiple "
-               "document interface applications using Qt."));
+   QMessageBox::about(this, tr("About Doge"),
+            tr("The <b>Doge</b> is my Stock Simulator"
+               "<br> Nikita Zvonarev, 2014"));
 }
 
 void MainWindow::updateMenus()
@@ -213,10 +214,10 @@ PlotsWindow* MainWindow::createMdiChild()
 
 void MainWindow::createActions()
 {
-    newAct = new QAction(QIcon(":/images/new.png"), tr("&New"), this);
-    newAct->setShortcuts(QKeySequence::New);
-    newAct->setStatusTip(tr("Create a new file"));
-    connect(newAct, SIGNAL(triggered()), this, SLOT(newFile()));
+    newPlotAct = new QAction(QIcon(":/images/plot.png"), tr("&New Plot"), this);
+    newPlotAct->setShortcuts(QKeySequence::New);
+    newPlotAct->setStatusTip(tr("Create a new plot"));
+    connect(newPlotAct, SIGNAL(triggered()), this, SLOT(newPlot()));
 
     //openAct = new QAction(QIcon(":/images/open.png"), tr("&Open..."), this);
     //openAct->setShortcuts(QKeySequence::Open);
@@ -305,15 +306,15 @@ void MainWindow::createActions()
 
 void MainWindow::createMenus()
 {
-    fileMenu = menuBar()->addMenu(tr("&File"));
-    fileMenu->addAction(newAct);
+    actionMenu = menuBar()->addMenu(tr("&Action"));
+    actionMenu->addAction(newPlotAct);
    // fileMenu->addAction(openAct);
    // fileMenu->addAction(saveAct);
     //fileMenu->addAction(saveAsAct);
-    fileMenu->addSeparator();
+    actionMenu->addSeparator();
     //QAction *action = fileMenu->addAction(tr("Switch layout direction"));
     //connect(action, SIGNAL(triggered()), this, SLOT(switchLayoutDirection()));
-    fileMenu->addAction(exitAct);
+    actionMenu->addAction(exitAct);
 
     //editMenu = menuBar()->addMenu(tr("&Edit"));
 //#ifndef QT_NO_CLIPBOARD
@@ -335,8 +336,10 @@ void MainWindow::createMenus()
 
 void MainWindow::createToolBars()
 {
-    fileToolBar = addToolBar(tr("File"));
-    fileToolBar->addAction(newAct);
+    fileToolBar = new QToolBar(tr("Action"));
+    addToolBar(Qt::LeftToolBarArea, fileToolBar);
+    fileToolBar -> addAction(newPlotAct);
+    //fileToolBar -> setOrientation(Qt::Vertical);
 //    fileToolBar->addAction(openAct);
 //    fileToolBar->addAction(saveAct);
 
@@ -353,21 +356,21 @@ void MainWindow::createStatusBar()
     statusBar()->showMessage(tr("Ready"));
 }
 
-void MainWindow::readSettings()
-{
-    QSettings settings("QtProject", "MDI Example");
-    QPoint pos = settings.value("pos", QPoint(200, 200)).toPoint();
-    QSize size = settings.value("size", QSize(400, 400)).toSize();
-    move(pos);
-    resize(size);
-}
+//void MainWindow::readSettings()
+//{
+//    QSettings settings("QtProject", "MDI Example");
+//    QPoint pos = settings.value("pos", QPoint(200, 200)).toPoint();
+//    QSize size = settings.value("size", QSize(400, 400)).toSize();
+//    move(pos);
+//    resize(size);
+//}
 
-void MainWindow::writeSettings()
-{
-    QSettings settings("QtProject", "MDI Example");
-    settings.setValue("pos", pos());
-    settings.setValue("size", size());
-}
+//void MainWindow::writeSettings()
+//{
+//    QSettings settings("QtProject", "MDI Example");
+//    settings.setValue("pos", pos());
+//    settings.setValue("size", size());
+//}
 
 PlotsWindow* MainWindow::activeMdiChild()
 {

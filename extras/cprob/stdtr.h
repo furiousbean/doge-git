@@ -9,6 +9,10 @@ double stdtri(int, double);
 
 double stdtr(int, double);
 
+double ndtri(double);
+
+double ndtr(double);
+
 #ifdef __cplusplus
 }
 #endif

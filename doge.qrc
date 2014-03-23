@@ -3,5 +3,6 @@
         <file>images/plot.png</file>
         <file>images/histogram.png</file>
         <file>images/doge.jpg</file>
+        <file>images/doge-icon.png</file>
     </qresource>
 </RCC>

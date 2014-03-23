@@ -11,6 +11,7 @@ struct TransactData {
 	dvector income;
 };
 
+//! Sliding window strategy
 class Strategy {
 protected:
 	StockParameters* sp;

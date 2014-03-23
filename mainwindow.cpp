@@ -45,8 +45,7 @@
 #include "aboutwindow.h"
 #include "histowindow.h"
 
-MainWindow::MainWindow()
-{
+MainWindow::MainWindow() {
     mdiArea = new QMdiArea;
     mdiArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     mdiArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
@@ -68,42 +67,40 @@ MainWindow::MainWindow()
 
     setWindowTitle("Stock Simulator Of Doge");
     setUnifiedTitleAndToolBarOnMac(true);
+    setWindowIcon (QIcon(":/images/doge-icon.png"));
     showMaximized();
 }
 
-void MainWindow::closeEvent(QCloseEvent *event)
-{
+void MainWindow::closeEvent(QCloseEvent *event) {
     mdiArea->closeAllSubWindows();
     if (mdiArea->currentSubWindow()) {
         event->ignore();
     } else {
-        //writeSettings();
         event->accept();
     }
 }
 
-void MainWindow::newPlot()
-{
+void MainWindow::newPlot() {
     QMdiSubWindow* child = createPlotChild();
-    //child->newFile();
     child->show();
 }
 
-void MainWindow::newHistogram()
-{
-    //QMdiSubWindow* child = createPlotChild();
-    //child->newFile();
-    //child->show();
+void MainWindow::newHistogram() {
     StockParameters sp;
     HistoConf dlg(sp);
     int result = dlg.exec();
+
     if (result == QDialog::Accepted) {
         HistoWindow* hw = new HistoWindow(sp);
+
         connect(hw, SIGNAL(hpbar_hide()), this, SLOT(hpbar_hide()));
         connect(hw, SIGNAL(hpbar_show()), this, SLOT(hpbar_show()));
-        connect(hw, SIGNAL(hpbar_setMinimum(int)), this, SLOT(hpbar_setMinimum(int)));
-        connect(hw, SIGNAL(hpbar_setMaximum(int)), this, SLOT(hpbar_setMaximum(int)));
+        connect(hw, SIGNAL(hpbar_setMinimum(int)), this,
+                SLOT(hpbar_setMinimum(int)));
+        connect(hw, SIGNAL(hpbar_setMaximum(int)), this,
+                SLOT(hpbar_setMaximum(int)));
         connect(hw, SIGNAL(hpbar_setValue(int)), this, SLOT(hpbar_setValue(int)));
+
         statusBar()->showMessage(tr("Please wait while histogram is baked..."));
         mdiArea->addSubWindow(hw);
         hw -> make_work(dlg.get_sample_size());
@@ -113,72 +110,14 @@ void MainWindow::newHistogram()
 
 }
 
-/*void MainWindow::open()
-{
-    QString fileName = QFileDialog::getOpenFileName(this);
-    if (!fileName.isEmpty()) {
-        QMdiSubWindow *existing = findMdiChild(fileName);
-        if (existing) {
-            mdiArea->setActiveSubWindow(existing);
-            return;
-        }
-
-        MdiChild *child = createMdiChild();
-        if (child->loadFile(fileName)) {
-            statusBar()->showMessage(tr("File loaded"), 2000);
-            child->show();
-        } else {
-            child->close();
-        }
-    }
-}*/
-
-/*void MainWindow::save()
-{
-    if (activeMdiChild() && activeMdiChild()->save())
-        statusBar()->showMessage(tr("File saved"), 2000);
-}
-
-void MainWindow::saveAs()
-{
-    if (activeMdiChild() && activeMdiChild()->saveAs())
-        statusBar()->showMessage(tr("File saved"), 2000);
-}
-
-#ifndef QT_NO_CLIPBOARD
-void MainWindow::cut()
-{
-    if (activeMdiChild())
-        activeMdiChild()->cut();
-}
-
-void MainWindow::copy()
-{
-    if (activeMdiChild())
-        activeMdiChild()->copy();
-}
-
-void MainWindow::paste()
-{
-    if (activeMdiChild())
-        activeMdiChild()->paste();
-}
-#endif
-*/
-void MainWindow::about()
-{
+void MainWindow::about() {
     AboutWindow aw;
     aw.exec();
 }
 
-void MainWindow::updateMenus()
-{
+void MainWindow::updateMenus() {
     bool hasMdiChild = (activeMdiChild() != 0);
-/*    saveAct->setEnabled(hasMdiChild);
-    saveAsAct->setEnabled(hasMdiChild);
-#ifndef QT_NO_CLIPBOARD
-    pasteAct->setEnabled(hasMdiChild);
-#endif*/
+
     closeAct->setEnabled(hasMdiChild);
     closeAllAct->setEnabled(hasMdiChild);
     tileAct->setEnabled(hasMdiChild);
@@ -187,16 +126,9 @@ void MainWindow::updateMenus()
     previousAct->setEnabled(hasMdiChild);
     separatorAct->setVisible(hasMdiChild);
 
-/*#ifndef QT_NO_CLIPBOARD
-    bool hasSelection = (activeMdiChild() &&
-                         activeMdiChild()->textCursor().hasSelection());
-    cutAct->setEnabled(hasSelection);
-    copyAct->setEnabled(hasSelection);
-#endif*/
 }
 
-void MainWindow::updateWindowMenu()
-{
+void MainWindow::updateWindowMenu() {
     windowMenu->clear();
     windowMenu->addAction(closeAct);
     windowMenu->addAction(closeAllAct);
@@ -214,14 +146,6 @@ void MainWindow::updateWindowMenu()
     for (int i = 0; i < windows.size(); ++i) {
         QMdiSubWindow* child = windows.at(i);
 
-        //QString text;
-        //if (i < 9) {
-        //    text = tr("&%1 %2").arg(i + 1)
-//                               .arg(child->userFriendlyCurrentFile());
-        //} else {
-        //    text = tr("%1 %2").arg(i + 1)
- //                             .arg(child->userFriendlyCurrentFile());
-        //}
         QAction *action  = windowMenu->addAction(child -> windowTitle());
         action->setCheckable(true);
         action ->setChecked(child == activeMdiChild());
@@ -230,8 +154,7 @@ void MainWindow::updateWindowMenu()
     }
 }
 
-QMdiSubWindow* MainWindow::createPlotChild()
-{
+QMdiSubWindow* MainWindow::createPlotChild() {
     PlotsWindow *child = new PlotsWindow;
     mdiArea->addSubWindow(child);
 
@@ -244,27 +167,13 @@ void MainWindow::createActions()
     newPlotAct->setShortcuts(QKeySequence::New);
     newPlotAct->setStatusTip(tr("Create a new plot"));
     connect(newPlotAct, SIGNAL(triggered()), this, SLOT(newPlot()));
-    newHistogramAct = new QAction(QIcon(":/images/histogram.png"), tr("&New Histogram"), this);
+    newHistogramAct = new QAction(QIcon(":/images/histogram.png"),
+                                  tr("&New Histogram"), this);
     QList<QKeySequence> histokey;
     histokey.push_back(QKeySequence(tr("Ctrl+h")));
     newHistogramAct->setShortcuts(histokey);
     newHistogramAct->setStatusTip(tr("Create a new histogram"));
     connect(newHistogramAct, SIGNAL(triggered()), this, SLOT(newHistogram()));
-
-    //openAct = new QAction(QIcon(":/images/open.png"), tr("&Open..."), this);
-    //openAct->setShortcuts(QKeySequence::Open);
-    //openAct->setStatusTip(tr("Open an existing file"));
-    //connect(openAct, SIGNAL(triggered()), this, SLOT(open()));
-
-    //saveAct = new QAction(QIcon(":/images/save.png"), tr("&Save"), this);
-    //saveAct->setShortcuts(QKeySequence::Save);
-    //saveAct->setStatusTip(tr("Save the document to disk"));
-    //connect(saveAct, SIGNAL(triggered()), this, SLOT(save()));
-
-    //saveAsAct = new QAction(tr("Save &As..."), this);
-    //saveAsAct->setShortcuts(QKeySequence::SaveAs);
-    //saveAsAct->setStatusTip(tr("Save the document under a new name"));
-    //connect(saveAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
 
 //! [0]
     exitAct = new QAction(tr("E&xit"), this);
@@ -272,26 +181,6 @@ void MainWindow::createActions()
     exitAct->setStatusTip(tr("Exit the application"));
     connect(exitAct, SIGNAL(triggered()), qApp, SLOT(closeAllWindows()));
 //! [0]
-
-//#ifndef QT_NO_CLIPBOARD
-//    cutAct = new QAction(QIcon(":/images/cut.png"), tr("Cu&t"), this);
-//    cutAct->setShortcuts(QKeySequence::Cut);
-//    cutAct->setStatusTip(tr("Cut the current selection's contents to the "
-//                            "clipboard"));
-//    connect(cutAct, SIGNAL(triggered()), this, SLOT(cut()));
-
-//    copyAct = new QAction(QIcon(":/images/copy.png"), tr("&Copy"), this);
-//    copyAct->setShortcuts(QKeySequence::Copy);
-//    copyAct->setStatusTip(tr("Copy the current selection's contents to the "
-//                             "clipboard"));
-//    connect(copyAct, SIGNAL(triggered()), this, SLOT(copy()));
-
-//    pasteAct = new QAction(QIcon(":/images/paste.png"), tr("&Paste"), this);
-//    pasteAct->setShortcuts(QKeySequence::Paste);
-//    pasteAct->setStatusTip(tr("Paste the clipboard's contents into the current "
-//                              "selection"));
-//    connect(pasteAct, SIGNAL(triggered()), this, SLOT(paste()));
-//#endif
 
     closeAct = new QAction(tr("Cl&ose"), this);
     closeAct->setStatusTip(tr("Close the active window"));
@@ -336,25 +225,12 @@ void MainWindow::createActions()
     connect(aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 }
 
-void MainWindow::createMenus()
-{
+void MainWindow::createMenus() {
     actionMenu = menuBar()->addMenu(tr("&Action"));
     actionMenu->addAction(newPlotAct);
     actionMenu->addAction(newHistogramAct);
-   // fileMenu->addAction(openAct);
-   // fileMenu->addAction(saveAct);
-    //fileMenu->addAction(saveAsAct);
     actionMenu->addSeparator();
-    //QAction *action = fileMenu->addAction(tr("Switch layout direction"));
-    //connect(action, SIGNAL(triggered()), this, SLOT(switchLayoutDirection()));
     actionMenu->addAction(exitAct);
-
-    //editMenu = menuBar()->addMenu(tr("&Edit"));
-//#ifndef QT_NO_CLIPBOARD
-//    editMenu->addAction(cutAct);
-//    editMenu->addAction(copyAct);
-//    editMenu->addAction(pasteAct);
-//#endif
 
     windowMenu = menuBar()->addMenu(tr("&Window"));
     updateWindowMenu();
@@ -367,72 +243,23 @@ void MainWindow::createMenus()
     helpMenu->addAction(aboutQtAct);
 }
 
-void MainWindow::createToolBars()
-{
+void MainWindow::createToolBars() {
     fileToolBar = new QToolBar(tr("Action"));
     addToolBar(Qt::LeftToolBarArea, fileToolBar);
     fileToolBar -> addAction(newPlotAct);
     fileToolBar -> addAction(newHistogramAct);
 
-    //fileToolBar -> setOrientation(Qt::Vertical);
-//    fileToolBar->addAction(openAct);
-//    fileToolBar->addAction(saveAct);
-
-//#ifndef QT_NO_CLIPBOARD
-//   editToolBar = addToolBar(tr("Edit"));
-//    editToolBar->addAction(cutAct);
-//    editToolBar->addAction(copyAct);
-//    editToolBar->addAction(pasteAct);
-//#endif
 }
 
-void MainWindow::createStatusBar()
-{
+void MainWindow::createStatusBar() {
     statusBar()->showMessage(tr("Ready"));
 }
 
-//void MainWindow::readSettings()
-//{
-//    QSettings settings("QtProject", "MDI Example");
-//    QPoint pos = settings.value("pos", QPoint(200, 200)).toPoint();
-//    QSize size = settings.value("size", QSize(400, 400)).toSize();
-//    move(pos);
-//    resize(size);
-//}
-
-//void MainWindow::writeSettings()
-//{
-//    QSettings settings("QtProject", "MDI Example");
-//    settings.setValue("pos", pos());
-//    settings.setValue("size", size());
-//}
-
-QMdiSubWindow* MainWindow::activeMdiChild()
-{
+QMdiSubWindow* MainWindow::activeMdiChild() {
     if (QMdiSubWindow *activeSubWindow = mdiArea->activeSubWindow())
         return activeSubWindow;
     return 0;
 }
-
-//QMdiSubWindow *MainWindow::findMdiChild(const QString &fileName)
-//{
-//    QString canonicalFilePath = QFileInfo(fileName).canonicalFilePath();
-
-//    foreach (QMdiSubWindow *window, mdiArea->subWindowList()) {
-//        MdiChild *mdiChild = qobject_cast<MdiChild *>(window->widget());
-//        if (mdiChild->currentFile() == canonicalFilePath)
-//            return window;
-//    }
-//    return 0;
-//}
-
-//void MainWindow::switchLayoutDirection()
-//{
-//    if (layoutDirection() == Qt::LeftToRight)
-//        qApp->setLayoutDirection(Qt::RightToLeft);
-//    else
-//        qApp->setLayoutDirection(Qt::LeftToRight);
-//}
 
 void MainWindow::setActiveSubWindow(QWidget *window)
 {

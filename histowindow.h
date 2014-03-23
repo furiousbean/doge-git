@@ -7,12 +7,12 @@
 #include "qcustomplot.h"
 #include "stockparameters.h"
 
-//! Window with plots widget
-
 struct InnerHist {
     QVector<double> freqs;
     QVector<QString> capts;
 };
+
+//! Histogram window
 
 class HistoWindow : public QMdiSubWindow {
     Q_OBJECT
@@ -31,8 +31,6 @@ class HistoWindow : public QMdiSubWindow {
     StockParameters* sp;
     
     void init_plot(QCustomPlot* plot, QString title, InnerHist& ih);
-    //void set_lines(QCustomPlot* plot, dvector& trend, dvector& series,
-    //               dvector& income, dvector& buy, dvector& sell);
     InnerHist make_inner_hist(dvector sample);
     QString make_full_title(QString title, dvector sample);
 public:

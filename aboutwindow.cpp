@@ -18,6 +18,7 @@ AboutWindow::AboutWindow() {
     this -> setLayout(vlayout);
 
     layout()->setSizeConstraint( QLayout::SetFixedSize );
+    setWindowIcon (QIcon(":/images/doge-icon.png"));
 }
 
 AboutWindow::~AboutWindow() {

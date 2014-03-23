@@ -10,7 +10,6 @@ HistoConf::HistoConf(StockParameters& sp): sp(&sp) {
     buttonbox = new QDialogButtonBox(QDialogButtonBox::Ok
                                      | QDialogButtonBox::Cancel);
 
-    //connect(buttonbox, SIGNAL(accepted()), this, SLOT(accept()));
     connect(buttonbox, SIGNAL(accepted()), this, SLOT(apply_pars()));
     connect(buttonbox, SIGNAL(rejected()), this, SLOT(reject()));
     samplabel = new QLabel("<b>Sample size</b>:");
@@ -22,27 +21,9 @@ HistoConf::HistoConf(StockParameters& sp): sp(&sp) {
     vlayout -> addWidget(sampbox);
     vlayout -> addWidget(buttonbox);
 
-    //vlayout -> addWidget(refreshbutton);
-
-    //connect(refreshbutton, SIGNAL(clicked()), this, SLOT(remake()));
     this -> setLayout(vlayout);
-    //leftpanel -> setLayout(plotslayout);
-    //setWidget(center);
-    //setMinimumSize(dimx, dimy);
-    //sizeHint() = QSize(dimx, dimy);
-    //resize(QSize(dimx, dimy));
-    //setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    //init_plot(upperplot, "Base period");
-    //init_plot(bottomplot, "Test period");
-    //bottomplot->legend->setVisible(true);
-    //bottomplot->plotLayout()->addElement(2, 0, bottomplot->legend);
-    //QSize restrictor;
-    //restrictor.setHeight(20);
-    //restrictor.setWidth(10000);
+    setWindowIcon (QIcon(":/images/histogram.png"));
 
-    //bottomplot->legend->setMaximumSize(restrictor);
-    //bottomplot->legend->setBorderPen(QPen(Qt::white));
-    //make_work();
 }
 
 int HistoConf::get_sample_size() const {

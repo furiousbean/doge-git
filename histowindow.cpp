@@ -2,7 +2,6 @@
 #include "strategy.h"
 #include "seriesgen.h"
 #include "stockparameters.h"
-//#include "randomgenerator.h"
 #include "strategyfactory.h"
 #include "common.h"
 #include "histowindow.h"
@@ -36,6 +35,8 @@ HistoWindow::HistoWindow(StockParameters& sp) : sp(&sp) {
     setMinimumSize(dimx, dimy);
 
     resize(QSize(dimx, dimy));
+    setWindowIcon (QIcon(":/images/histogram.png"));
+
 }
 
 HistoWindow::~HistoWindow() {
@@ -110,19 +111,23 @@ void HistoWindow::make_work(int sample_size) {
 InnerHist HistoWindow::make_inner_hist(dvector sample) {
     std::sort(sample.begin(), sample.end());
     int sz = sample.size();
-    double xl = sample[sz / 4];
-    double xr = sample[3 * sz / 4];
+    if (sz == 0) {
+        sample.push_back(0);
+        sz = 1;
+    }
+    double xl = sample[sz / 4]; //left quartile
+    double xr = sample[3 * sz / 4]; //right quartile
     double center = sample[sz / 2];
     double wdt = xr - xl;
-    double l_b = center - wdt * 0.8;
-    double r_b = center + wdt * 0.8;
-    double bwdt = wdt * 1.6;
-    int bins_cnt = 2 * std::pow(sz, (double)1 / 3);
+    double l_b = center - wdt * HISTOGRAM_BW_SZ;
+    double bwdt = wdt * HISTOGRAM_BW_SZ * 2;
+    int bins_cnt = 2 * std::pow(sz, (double)1 / 3); //Rice rule
     InnerHist ans;
     ans.freqs.push_back(0);
     int cur_bin = 0;
     for (int i = 0; i < sz; i++) {
-        while (sample[i] > cur_bin * (bwdt / bins_cnt) + l_b && cur_bin <= bins_cnt) {
+        while (sample[i] > cur_bin * (bwdt / bins_cnt) + l_b &&
+               cur_bin <= bins_cnt) {
             ans.freqs.push_back(0);
             cur_bin++;
         }
@@ -132,17 +137,16 @@ InnerHist HistoWindow::make_inner_hist(dvector sample) {
         int diff = ans.freqs.size() - bins_cnt - 2;
         for (int i = 0; i < diff; ++i) ans.freqs.push_back(0);
     }
-    ans.capts.push_back("<" + double_to_QString(l_b, 1, 1));
-    for (int i = 0; i < bins_cnt; i++) ans.capts.push_back("<"
-                + double_to_QString((i + 1) * (bwdt / bins_cnt) + l_b, 1, 1));
 
-    ans.capts.push_back(">" + double_to_QString(r_b, 1, 1));
+    for (int i = 0; i <= bins_cnt; i++) ans.capts.push_back(
+                double_to_QString(i * (bwdt / bins_cnt) + l_b, 1, 1));
+
     return ans;
 }
 
 
  void HistoWindow::init_plot(QCustomPlot* plot, QString title, InnerHist& ih) {
-     plot->plotLayout()->insertRow(0); // inserts an empty row above the default axis rect
+     plot->plotLayout()->insertRow(0); // inserts an empty row
      QCPPlotTitle* Ptitle = new QCPPlotTitle(plot, title);
      QFont tfont(Ptitle->font());
      tfont.setPointSize(10);
@@ -154,8 +158,14 @@ InnerHist HistoWindow::make_inner_hist(dvector sample) {
      plot->addPlottable(bars);
 
      QVector<double> ticks;
+     QVector<double> barlegs;
 
-     for (int i = 0; i < ih.capts.size(); i++) ticks << i;
+     for (int i = 0; i < ih.capts.size(); i++) {
+         barlegs << i;
+         ticks << (float)i + 0.5;
+     }
+
+     barlegs << ih.capts.size();
 
      plot->xAxis->setAutoTicks(false);
      plot->xAxis->setAutoTickLabels(false);
@@ -165,14 +175,14 @@ InnerHist HistoWindow::make_inner_hist(dvector sample) {
      plot->xAxis->setSubTickCount(0);
      plot->xAxis->setTickLength(0, 4);
      plot->xAxis->grid()->setVisible(true);
-     plot->xAxis->setRange(-1, ih.capts.size());
+     plot->xAxis->setRange(-1, ih.capts.size() + 1);
 
      int ymax = 0;
      for (int i = 0; i < ih.freqs.size(); i++)
          if (ih.freqs[i] > ymax) ymax = ih.freqs[i];
 
      // prepare y axis:
-     plot->yAxis->setRange(0, ymax);
+     plot->yAxis->setRange(0, ymax + 1);
      plot->yAxis->setPadding(5); // a bit more space to the left border
      plot->yAxis->setLabel("Frequency");
      plot->yAxis->grid()->setSubGridVisible(true);
@@ -184,11 +194,12 @@ InnerHist HistoWindow::make_inner_hist(dvector sample) {
      plot->yAxis->grid()->setSubGridPen(gridPen);
 
      // Add data:
-     bars -> setData(ticks, ih.freqs);
+     bars -> setData(barlegs, ih.freqs);
      plot->replot();
 }
 
 QString HistoWindow::make_full_title(QString title, dvector sample) {
+    if (sample.size() == 0) return title;
     double mean = 0;
     for (uint i = 0; i < sample.size(); i++) mean += sample[i];
     mean /= sample.size();

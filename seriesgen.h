@@ -10,6 +10,7 @@ struct SeriesData {
 	dvector trend;
 };
 
+//! Series and trend generator
 class SeriesGenerator {
 private:
 	StockParameters* sp;

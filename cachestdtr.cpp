@@ -2,7 +2,6 @@
 #include "stdtr.h"
 #include <iostream>
 
-//std::unordered_map<int, double> CacheStdtr::cache;
 double CacheStdtr::cache[BIG_DF + 1][BIG_M + 1];
 
 double CacheStdtr::eval(int df, double x) {

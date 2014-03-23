@@ -3,6 +3,7 @@
 #include "strategy.h"
 #include "basestrategy.h"
 
+//! Strategy optimizer
 class StrategyFactory {
 protected:
 	StockParameters* sp;

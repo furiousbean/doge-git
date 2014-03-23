@@ -1,6 +1,7 @@
 #ifndef STOCKPARAMETERS_H
 #define STOCKPARAMETERS_H
 
+//!Stock Parameters struct
 struct StockParameters {
 	int length;
 	double noise_sd;

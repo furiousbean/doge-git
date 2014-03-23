@@ -3,6 +3,7 @@
 
 #include "strategy.h"
 
+//! Base strategy abstract class
 class BaseStrategy : public Strategy {
 private:
 	int L;

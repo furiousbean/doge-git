@@ -1,21 +1,15 @@
 #ifndef PARAMWIDGET_H
 #define PARAMWIDGET_H
 
-//#include <QMainWindow>
 #include <QLabel>
-//#include <QSlider>
-//#include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QGridLayout>
-//#include <QPushButton>
 #include <QGroupBox>
-//#include <QRadioButton>
 #include <QComboBox>
 #include <QDoubleSpinBox>
 #include <QSpinBox>
-//#include <QMessageBox>
 #include "stockparameters.h"
 
-//! Constructs & performs settings change using GUI
+//! Widget for controlling task's parameters
 class ParamWidget : public QGroupBox {
     Q_OBJECT
     StockParameters* sp;
@@ -36,17 +30,9 @@ class ParamWidget : public QGroupBox {
     QLabel* criterialabel;
     QComboBox* criteriabox;
 
-    //QGroupBox* advancedbox;
-    //QVBoxLayout* advancedlayout;
-    
-    //QMessageBox* errorbox;
-
 public:
     explicit ParamWidget(StockParameters& sp);
     ~ParamWidget();
-//signals:
-    //! Sends reset signal to SearchWidget
-//    void make_reset();
 public slots:
     //! Scan parameters from sp
     void scan_pars();

@@ -21,7 +21,8 @@ Strategy* StrategyFactory::optimize(const dvector& series) const {
 	double optimal_p = MIN_OPT_PROB;
     double bestscore = -std::numeric_limits<double>::infinity();
     for (int L = 3; L <= std::min(MAX_L, (int)series.size()); L++)
-        for (double p = MIN_OPT_PROB; p <= MAX_OPT_PROB; p += OPT_PROB_STEP) { //bad place
+        for (double p = MIN_OPT_PROB; p <= MAX_OPT_PROB; p += OPT_PROB_STEP) {
+            //bad place
             BaseStrategy trystrat(*sp, L, p);
             TransactData result(trystrat.insert_series(series));
             double score = eval_score(result.income);
@@ -35,10 +36,7 @@ Strategy* StrategyFactory::optimize(const dvector& series) const {
         TwoStepStrategy trystrat(*sp);
         TransactData result(trystrat.insert_series(series));
         double score = eval_score(result.income);
-        if (score > bestscore) {
-			optimal_L = 2;
-            bestscore = result.income.back();
-		}
+        if (score > bestscore) optimal_L = 2;
     }
     Strategy* result;
     if (optimal_L > 2) result = new BaseStrategy(*sp, optimal_L, optimal_p); else

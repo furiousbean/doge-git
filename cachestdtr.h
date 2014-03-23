@@ -4,6 +4,7 @@
 #include "common.h"
 #include <unordered_map>
 
+//! Cache for Student Distribution Quantiles
 class CacheStdtr {
 public:
     static double cache[BIG_DF + 1][BIG_M + 1];

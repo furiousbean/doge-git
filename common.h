@@ -6,8 +6,7 @@
 #include <sstream>
 
 typedef std::vector<double> dvector;
-//typedef std::vector<std::pair<double, double> > boundvector;
-//typedef std::list<dvector> seqlist;
+
 typedef unsigned int uint;
 
 const int SP_LENGTH = 150;
@@ -28,6 +27,8 @@ const int BIG_M = 1000;
 const double MIN_OPT_PROB = 0.025;
 const double MAX_OPT_PROB = 0.51;
 const double OPT_PROB_STEP = 0.025;
+
+const double HISTOGRAM_BW_SZ = 0.8;
 
 QString int_to_QString(int val);
 

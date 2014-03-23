@@ -6,6 +6,7 @@
 #include "strategy.h"
 #include <QString>
 
+//! Risk evaluator and information generator
 class FinanceCalculator {
 public:
 	static double eval_risk(const dvector& income);

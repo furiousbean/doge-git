@@ -10,7 +10,7 @@
 #include "stockparameters.h"
 #include "paramwidget.h"
 
-//! Histogram configuration window
+//! About dialog
 class AboutWindow : public QDialog {
     Q_OBJECT
 

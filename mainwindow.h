@@ -54,6 +54,7 @@ QT_END_NAMESPACE
 #include "plotswindow.h"
 #include "histoconf.h"
 
+//! Main MDI window
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -78,8 +79,6 @@ private:
     void createMenus();
     void createToolBars();
     void createStatusBar();
-    //void readSettings();
-    //void writeSettings();
     QMdiSubWindow *activeMdiChild();
 
     QMdiArea *mdiArea;
@@ -90,7 +89,6 @@ private:
     QMenu *windowMenu;
     QMenu *helpMenu;
     QToolBar *fileToolBar;
-    //QToolBar *editToolBar;
     QAction *newPlotAct;
     QAction *newHistogramAct;
     QAction *exitAct;

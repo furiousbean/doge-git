@@ -45,6 +45,8 @@ PlotsWindow::PlotsWindow() {
     sizeHint() = QSize(dimx, dimy);
     resize(QSize(dimx, dimy));
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    setWindowIcon (QIcon(":/images/plot.png"));
+
     init_plot(upperplot, "Base period");
     init_plot(bottomplot, "Test period");
     bottomplot->legend->setVisible(true);

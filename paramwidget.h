@@ -9,7 +9,7 @@
 //#include <QPushButton>
 #include <QGroupBox>
 //#include <QRadioButton>
-//#include <QComboBox>
+#include <QComboBox>
 #include <QDoubleSpinBox>
 #include <QSpinBox>
 //#include <QMessageBox>
@@ -33,6 +33,8 @@ class ParamWidget : public QGroupBox {
     QDoubleSpinBox* inprbox;
     QLabel* inbaglabel;
     QDoubleSpinBox* inbagbox;
+    QLabel* criterialabel;
+    QComboBox* criteriabox;
 
     //QGroupBox* advancedbox;
     //QVBoxLayout* advancedlayout;

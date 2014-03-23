@@ -8,6 +8,7 @@ struct StockParameters {
 	double trend_prob;
 	double initial_price;
 	double initial_bag;
+    int optim_crit;
     StockParameters();
 };
 

@@ -16,7 +16,10 @@ HEADERS += \
     paramwidget.h \
     mainwindow.h \
     cachestdtr.h \
-    twostepstrategy.h
+    twostepstrategy.h \
+    histoconf.h \
+    aboutwindow.h \
+    histowindow.h
 
 SOURCES += \
     common.cpp \
@@ -86,7 +89,10 @@ SOURCES += \
     paramwidget.cpp \
     mainwindow.cpp \
     cachestdtr.cpp \
-    twostepstrategy.cpp
+    twostepstrategy.cpp \
+    histoconf.cpp \
+    aboutwindow.cpp \
+    histowindow.cpp
 CONFIG += c++11 console
 TARGET = doge_gui
 QT+= widgets printsupport

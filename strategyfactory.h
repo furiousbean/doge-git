@@ -6,9 +6,10 @@
 class StrategyFactory {
 protected:
 	StockParameters* sp;
+    double eval_score(const dvector& series) const;
 public:
 	StrategyFactory(StockParameters& sp);
-    Strategy* optimize(const dvector& series);
+    Strategy* optimize(const dvector& series) const;
 };
 
 #endif //STRATEGYFACTORY_H

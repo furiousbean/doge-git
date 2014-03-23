@@ -12,6 +12,8 @@ ParamWidget::ParamWidget(StockParameters& sp) : QGroupBox("Parameters"), sp(&sp)
     trendlabel = new QLabel("<b>Trend &mu;</b>:");
     inprlabel = new QLabel("<b>Initial price</b>:");
     inbaglabel = new QLabel("<b>Initial bag</b>:");
+    criterialabel = new QLabel("<b>Optimize</b>:");
+
 
     lengthbox = new QSpinBox;
     lengthbox -> setRange(1, 1000);
@@ -22,7 +24,7 @@ ParamWidget::ParamWidget(StockParameters& sp) : QGroupBox("Parameters"), sp(&sp)
     angnsbox -> setRange(0, 20);
     angnsbox -> setSingleStep(0.1);
     trendbox = new QDoubleSpinBox;
-    trendbox -> setRange(1.1, 100);
+    trendbox -> setRange(1.1, 1000);
     trendbox -> setSingleStep(0.2);
     inprbox = new QDoubleSpinBox;
     inprbox -> setRange(0, 10000);
@@ -30,6 +32,9 @@ ParamWidget::ParamWidget(StockParameters& sp) : QGroupBox("Parameters"), sp(&sp)
     inbagbox = new QDoubleSpinBox;
     inbagbox -> setRange(0, 10000);
     inbagbox -> setSingleStep(10);
+    criteriabox = new QComboBox();
+    criteriabox -> addItem("Income");
+    criteriabox -> addItem("Income/risk");
 
     layout -> addWidget(lengthlabel, 0, 0);
     layout -> addWidget(noiselabel, 1, 0);
@@ -37,6 +42,7 @@ ParamWidget::ParamWidget(StockParameters& sp) : QGroupBox("Parameters"), sp(&sp)
     layout -> addWidget(trendlabel, 3, 0);
     layout -> addWidget(inprlabel, 4, 0);
     layout -> addWidget(inbaglabel, 5, 0);
+    layout -> addWidget(criterialabel, 6, 0);
 
     layout -> addWidget(lengthbox, 0, 1);
     layout -> addWidget(noisebox, 1, 1);
@@ -44,6 +50,8 @@ ParamWidget::ParamWidget(StockParameters& sp) : QGroupBox("Parameters"), sp(&sp)
     layout -> addWidget(trendbox, 3, 1);
     layout -> addWidget(inprbox, 4, 1);
     layout -> addWidget(inbagbox, 5, 1);
+    layout -> addWidget(criteriabox, 6, 1);
+
 
     scan_pars();
 
@@ -51,6 +59,8 @@ ParamWidget::ParamWidget(StockParameters& sp) : QGroupBox("Parameters"), sp(&sp)
 
 ParamWidget::~ParamWidget() {
     //oh my gawd
+    delete criteriabox;
+    delete criterialabel;
     delete inbagbox;
     delete inbaglabel;
     delete inprbox;
@@ -74,6 +84,7 @@ void ParamWidget::scan_pars() {
     trendbox -> setValue(1 / (sp -> trend_prob));
     inprbox -> setValue(sp -> initial_price);
     inbagbox -> setValue(sp -> initial_bag);
+    criteriabox -> setCurrentIndex(sp -> optim_crit);
 }
 
 void ParamWidget::write_pars() {
@@ -83,4 +94,5 @@ void ParamWidget::write_pars() {
     sp -> trend_prob = 1 / (trendbox -> value());
     sp -> initial_price = inprbox -> value();
     sp -> initial_bag = inbagbox -> value();
+    sp -> optim_crit = criteriabox -> currentIndex();
 }

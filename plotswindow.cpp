@@ -9,7 +9,7 @@
 #include "financecalculator.h"
 
 const int dimx = 780;
-const int dimy = 400;
+const int dimy = 420;
 
 PlotsWindow::PlotsWindow() {
     setAttribute(Qt::WA_DeleteOnClose);
@@ -23,9 +23,9 @@ PlotsWindow::PlotsWindow() {
     hlayout -> addWidget(leftpanel);
     hlayout -> addWidget(rightpanel);
     center -> setLayout(hlayout);
-    rightpanel -> setMaximumWidth(200);
-    rightpanel -> setMinimumWidth(200);
-    rightpanel -> setMaximumHeight(400);
+    rightpanel -> setMaximumWidth(205);
+    rightpanel -> setMinimumWidth(205);
+    rightpanel -> setMaximumHeight(420);
     summary = new QLabel;
     plotslayout = new QVBoxLayout;
     plotslayout -> addWidget(upperplot);

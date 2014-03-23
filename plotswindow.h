@@ -43,4 +43,4 @@ public slots:
     void make_work();
 };
 
-#endif // SEARCHWINDOW_H
+#endif // PLOTSWINDOW_H

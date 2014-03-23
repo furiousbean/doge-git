@@ -42,6 +42,8 @@
 
 #include "mainwindow.h"
 #include "plotswindow.h"
+#include "aboutwindow.h"
+#include "histowindow.h"
 
 MainWindow::MainWindow()
 {
@@ -54,14 +56,15 @@ MainWindow::MainWindow()
     windowMapper = new QSignalMapper(this);
     connect(windowMapper, SIGNAL(mapped(QWidget*)),
             this, SLOT(setActiveSubWindow(QWidget*)));
+    hpbar = new QProgressBar;
+    statusBar() ->addPermanentWidget(hpbar);
+    hpbar_hide();
 
     createActions();
     createMenus();
     createToolBars();
     createStatusBar();
     updateMenus();
-
-    //readSettings();
 
     setWindowTitle("Stock Simulator Of Doge");
     setUnifiedTitleAndToolBarOnMac(true);
@@ -81,9 +84,33 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::newPlot()
 {
-    PlotsWindow *child = createMdiChild();
+    QMdiSubWindow* child = createPlotChild();
     //child->newFile();
     child->show();
+}
+
+void MainWindow::newHistogram()
+{
+    //QMdiSubWindow* child = createPlotChild();
+    //child->newFile();
+    //child->show();
+    StockParameters sp;
+    HistoConf dlg(sp);
+    int result = dlg.exec();
+    if (result == QDialog::Accepted) {
+        HistoWindow* hw = new HistoWindow(sp);
+        connect(hw, SIGNAL(hpbar_hide()), this, SLOT(hpbar_hide()));
+        connect(hw, SIGNAL(hpbar_show()), this, SLOT(hpbar_show()));
+        connect(hw, SIGNAL(hpbar_setMinimum(int)), this, SLOT(hpbar_setMinimum(int)));
+        connect(hw, SIGNAL(hpbar_setMaximum(int)), this, SLOT(hpbar_setMaximum(int)));
+        connect(hw, SIGNAL(hpbar_setValue(int)), this, SLOT(hpbar_setValue(int)));
+        statusBar()->showMessage(tr("Please wait while histogram is baked..."));
+        mdiArea->addSubWindow(hw);
+        hw -> make_work(dlg.get_sample_size());
+        hw -> show();
+        statusBar()->clearMessage();
+    }
+
 }
 
 /*void MainWindow::open()
@@ -140,9 +167,8 @@ void MainWindow::paste()
 */
 void MainWindow::about()
 {
-   QMessageBox::about(this, tr("About Doge"),
-            tr("The <b>Doge</b> is my Stock Simulator"
-               "<br> Nikita Zvonarev, 2014"));
+    AboutWindow aw;
+    aw.exec();
 }
 
 void MainWindow::updateMenus()
@@ -186,7 +212,7 @@ void MainWindow::updateWindowMenu()
     separatorAct->setVisible(!windows.isEmpty());
 
     for (int i = 0; i < windows.size(); ++i) {
-        PlotsWindow* child = qobject_cast<PlotsWindow*>(windows.at(i));
+        QMdiSubWindow* child = windows.at(i);
 
         //QString text;
         //if (i < 9) {
@@ -204,7 +230,7 @@ void MainWindow::updateWindowMenu()
     }
 }
 
-PlotsWindow* MainWindow::createMdiChild()
+QMdiSubWindow* MainWindow::createPlotChild()
 {
     PlotsWindow *child = new PlotsWindow;
     mdiArea->addSubWindow(child);
@@ -218,6 +244,12 @@ void MainWindow::createActions()
     newPlotAct->setShortcuts(QKeySequence::New);
     newPlotAct->setStatusTip(tr("Create a new plot"));
     connect(newPlotAct, SIGNAL(triggered()), this, SLOT(newPlot()));
+    newHistogramAct = new QAction(QIcon(":/images/histogram.png"), tr("&New Histogram"), this);
+    QList<QKeySequence> histokey;
+    histokey.push_back(QKeySequence(tr("Ctrl+h")));
+    newHistogramAct->setShortcuts(histokey);
+    newHistogramAct->setStatusTip(tr("Create a new histogram"));
+    connect(newHistogramAct, SIGNAL(triggered()), this, SLOT(newHistogram()));
 
     //openAct = new QAction(QIcon(":/images/open.png"), tr("&Open..."), this);
     //openAct->setShortcuts(QKeySequence::Open);
@@ -308,6 +340,7 @@ void MainWindow::createMenus()
 {
     actionMenu = menuBar()->addMenu(tr("&Action"));
     actionMenu->addAction(newPlotAct);
+    actionMenu->addAction(newHistogramAct);
    // fileMenu->addAction(openAct);
    // fileMenu->addAction(saveAct);
     //fileMenu->addAction(saveAsAct);
@@ -339,6 +372,8 @@ void MainWindow::createToolBars()
     fileToolBar = new QToolBar(tr("Action"));
     addToolBar(Qt::LeftToolBarArea, fileToolBar);
     fileToolBar -> addAction(newPlotAct);
+    fileToolBar -> addAction(newHistogramAct);
+
     //fileToolBar -> setOrientation(Qt::Vertical);
 //    fileToolBar->addAction(openAct);
 //    fileToolBar->addAction(saveAct);
@@ -372,10 +407,10 @@ void MainWindow::createStatusBar()
 //    settings.setValue("size", size());
 //}
 
-PlotsWindow* MainWindow::activeMdiChild()
+QMdiSubWindow* MainWindow::activeMdiChild()
 {
     if (QMdiSubWindow *activeSubWindow = mdiArea->activeSubWindow())
-        return qobject_cast<PlotsWindow*>(activeSubWindow);
+        return activeSubWindow;
     return 0;
 }
 
@@ -404,4 +439,24 @@ void MainWindow::setActiveSubWindow(QWidget *window)
     if (!window)
         return;
     mdiArea->setActiveSubWindow(qobject_cast<QMdiSubWindow *>(window));
+}
+
+void MainWindow::hpbar_hide() {
+    hpbar -> hide();
+}
+
+void MainWindow::hpbar_show() {
+    hpbar -> show();
+}
+
+void MainWindow::hpbar_setMinimum(int value) {
+    hpbar -> setMinimum(value);
+}
+
+void MainWindow::hpbar_setMaximum(int value) {
+    hpbar -> setMaximum(value);
+}
+
+void MainWindow::hpbar_setValue(int value) {
+    hpbar -> setValue(value);
 }

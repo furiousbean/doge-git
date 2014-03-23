@@ -52,6 +52,7 @@ class QSignalMapper;
 QT_END_NAMESPACE
 
 #include "plotswindow.h"
+#include "histoconf.h"
 
 class MainWindow : public QMainWindow
 {
@@ -65,10 +66,11 @@ protected:
 
 private slots:
     void newPlot();
+    void newHistogram();
     void about();
     void updateMenus();
     void updateWindowMenu();
-    PlotsWindow* createMdiChild();
+    QMdiSubWindow* createPlotChild();
     void setActiveSubWindow(QWidget *window);
 
 private:
@@ -78,10 +80,11 @@ private:
     void createStatusBar();
     //void readSettings();
     //void writeSettings();
-    PlotsWindow* activeMdiChild();
+    QMdiSubWindow *activeMdiChild();
 
     QMdiArea *mdiArea;
     QSignalMapper *windowMapper;
+    QProgressBar *hpbar;
 
     QMenu *actionMenu;
     QMenu *windowMenu;
@@ -89,6 +92,7 @@ private:
     QToolBar *fileToolBar;
     //QToolBar *editToolBar;
     QAction *newPlotAct;
+    QAction *newHistogramAct;
     QAction *exitAct;
     QAction *closeAct;
     QAction *closeAllAct;
@@ -99,6 +103,13 @@ private:
     QAction *separatorAct;
     QAction *aboutAct;
     QAction *aboutQtAct;
+
+public slots:
+    void hpbar_hide();
+    void hpbar_show();
+    void hpbar_setMinimum(int value);
+    void hpbar_setMaximum(int value);
+    void hpbar_setValue(int value);
 };
 
 #endif

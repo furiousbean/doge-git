@@ -28,13 +28,13 @@ class HistoWindow : public QMdiSubWindow {
     QWidget* center;
     QGridLayout* centerlayout;
 
-    StockParameters* sp;
+    StockParameters sp;
     
     void init_plot(QCustomPlot* plot, QString title, InnerHist& ih);
     InnerHist make_inner_hist(dvector sample);
     QString make_full_title(QString title, dvector sample);
 public:
-    explicit HistoWindow(StockParameters& sp);
+    explicit HistoWindow(const StockParameters& sp);
     void make_work(int sample_size);
     ~HistoWindow();
 signals:

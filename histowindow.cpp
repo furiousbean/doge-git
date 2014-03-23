@@ -12,7 +12,7 @@
 const int dimx = 780;
 const int dimy = 420;
 
-HistoWindow::HistoWindow(StockParameters& sp) : sp(&sp) {
+HistoWindow::HistoWindow(const StockParameters& sp) : sp(sp) {
     setAttribute(Qt::WA_DeleteOnClose);
     baseincplot = new QCustomPlot;
     baseriskplot = new QCustomPlot;
@@ -51,11 +51,11 @@ HistoWindow::~HistoWindow() {
 }
 
 void HistoWindow::make_work(int sample_size) {
-    setWindowTitle("Histogram; " + FinanceCalculator::parameter_summary(*sp));
+    setWindowTitle("Histogram; " + FinanceCalculator::parameter_summary(sp));
     emit hpbar_show();
     emit hpbar_setMinimum(0);
     emit hpbar_setMaximum(sample_size - 1);
-    SeriesGenerator sergen(*sp);
+    SeriesGenerator sergen(sp);
     dvector baseincome;
     dvector testincome;
     dvector baserisk;
@@ -66,7 +66,7 @@ void HistoWindow::make_work(int sample_size) {
     for (int k = 0; k < sample_size; k++) {
         emit hpbar_setValue(k);
         SeriesData basedata = sergen.generate();
-        StrategyFactory stratfact(*sp);
+        StrategyFactory stratfact(sp);
         Strategy* goodstrategy = stratfact.optimize(basedata.series);
         SeriesData testdata = sergen.generate();
         TransactData baseresult = goodstrategy -> insert_series(basedata.series);

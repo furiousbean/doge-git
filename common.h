@@ -28,7 +28,7 @@ const double MIN_OPT_PROB = 0.025;
 const double MAX_OPT_PROB = 0.51;
 const double OPT_PROB_STEP = 0.025;
 
-const double HISTOGRAM_BW_SZ = 0.8;
+const double HISTOGRAM_BW_SZ = 1.0;
 
 QString int_to_QString(int val);
 

@@ -75,7 +75,10 @@ PlotsWindow::~PlotsWindow() {
 }
 
 void PlotsWindow::init_plot(QCustomPlot* plot, QString title) {
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 2; i++)
+      plot->addGraph();
+    plot->addGraph(plot->xAxis, plot->yAxis2);
+    for (int i = 3; i < 5; i++)
       plot->addGraph();
 
     plot->graph(0)->setPen(QPen(Qt::blue));
@@ -97,27 +100,29 @@ void PlotsWindow::init_plot(QCustomPlot* plot, QString title) {
     plot->graph(2)->setName("Income");
     plot->graph(3)->setName("Buy points");
     plot->graph(4)->setName("Sell points");
+    plot -> yAxis2 -> setVisible(true);
 }
 
 void PlotsWindow::set_lines(QCustomPlot* plot, dvector& trend, dvector& series,
                             dvector& income, dvector& buy, dvector& sell) {
     for (int i = 0; i < 5; i++)
         plot->graph(i)->clearData();
-    double umin = 1e100, umax = -1e100;
+    double umin1 = 1e100, umax1 = -1e100;
+    double umin2 = 1e100, umax2 = -1e100;
 
     for (uint i = 0; i < series.size(); i++) {
-        umin = std::min(trend[i], umin);
-        umax = std::max(trend[i], umax);
+        umin1 = std::min(trend[i], umin1);
+        umax1 = std::max(trend[i], umax1);
         plot->graph(0)->addData(i, trend[i]);
     }
     for (uint i = 0; i < series.size(); i++) {
-        umin = std::min(series[i], umin);
-        umax = std::max(series[i], umax);
+        umin1 = std::min(series[i], umin1);
+        umax1 = std::max(series[i], umax1);
         plot->graph(1)->addData(i, series[i]);
     }
     for (uint i = 0; i < series.size(); i++) {
-        umin = std::min(income[i], umin);
-        umax = std::max(income[i], umax);
+        umin2 = std::min(income[i], umin2);
+        umax2 = std::max(income[i], umax2);
         plot->graph(2)->addData(i, income[i]);
     }
 
@@ -126,10 +131,11 @@ void PlotsWindow::set_lines(QCustomPlot* plot, dvector& trend, dvector& series,
     for (uint i = 0; i < sell.size(); i++)
         plot->graph(4)->addData(sell[i], series[sell[i]]);
 
-
     plot->xAxis->setRange(0, series.size());
-    plot->yAxis->setRange(umin - (umax - umin) / BORDER_DIV,
-                          umax + (umax - umin) / BORDER_DIV);
+    plot->yAxis->setRange(umin1 - (umax1 - umin1) / BORDER_DIV,
+                          umax1 + (umax1 - umin1) / BORDER_DIV);
+    plot->yAxis2->setRange(umin2 - (umax2 - umin2) / BORDER_DIV,
+                          umax2 + (umax2 - umin2) / BORDER_DIV);
     plot->replot();
 }
 
